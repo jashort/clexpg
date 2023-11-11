@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/shopspring/decimal"
 	"golang.org/x/text/cases"
@@ -42,6 +43,12 @@ func formatExpense(expense Expense) string {
 }
 
 func main() {
+	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
+	addFile := addCmd.String("f", "expenses.csv", "Path to data file")
+
+	listCmd := flag.NewFlagSet("list", flag.ExitOnError)
+	listFile := listCmd.String("f", "expenses.csv", "Path to data file")
+
 	command := "help"
 	if len(os.Args) > 1 {
 		command = os.Args[1]
@@ -49,9 +56,22 @@ func main() {
 
 	switch command {
 	case "add":
+		err := addCmd.Parse(os.Args[2:])
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		fmt.Println("add")
+		fmt.Printf("  file: %s\n", *addFile)
 	case "list":
 		fmt.Println("list")
+		err := listCmd.Parse(os.Args[2:])
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println("list")
+		fmt.Printf("  file: %s\n", *listFile)
 	case "total":
 		fmt.Println("total")
 	case "summary":
