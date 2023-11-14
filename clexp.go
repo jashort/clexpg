@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"github.com/shopspring/decimal"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+	"log"
 	"os"
+	"sort"
 	"strings"
 	"time"
 )
@@ -19,13 +22,23 @@ type Expense struct {
 	Cost     decimal.Decimal
 }
 
+func (e Expense) String() string {
+	return fmt.Sprintf("%s\t%s\t%s\t%s", e.Date.Format("1/2/2006"), e.Category, e.Item, e.Cost)
+}
+
+type byDate []Expense
+
+func (a byDate) Len() int           { return len(a) }
+func (a byDate) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a byDate) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
+
 // Parses a tab-separated string in to an Expense struct
 // Example: "5/21/2023\t fun\tMy stuff\t$10.00"
 func parseExpense(data string) Expense {
 	s := strings.Split(strings.TrimSpace(data), "\t")
 	timestamp, err := time.Parse("1/2/2006", s[0])
 	if err != nil {
-		panic(err)
+		log.Fatal("Error parsing ", data, err)
 	}
 	cost := decimal.RequireFromString(strings.Replace(s[3], "$", "", 1))
 	p := Expense{
@@ -58,20 +71,21 @@ func main() {
 	case "add":
 		err := addCmd.Parse(os.Args[2:])
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 		fmt.Println("add")
 		fmt.Printf("  file: %s\n", *addFile)
 	case "list":
-		fmt.Println("list")
 		err := listCmd.Parse(os.Args[2:])
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
-		fmt.Println("list")
-		fmt.Printf("  file: %s\n", *listFile)
+		data := loadFile(*listFile)
+		sort.Sort(byDate(data))
+		for _, element := range data {
+			fmt.Println(element)
+		}
+
 	case "total":
 		fmt.Println("total")
 	case "summary":
@@ -91,4 +105,25 @@ func main() {
         add, list, summary, total, totals, categories, search, detail, help`)
 		os.Exit(1)
 	}
+}
+
+func loadFile(s string) []Expense {
+	var expenses []Expense
+	file, err := os.Open(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	scanner.Scan() // Skip first line
+	for scanner.Scan() {
+		item := parseExpense(scanner.Text())
+		expenses = append(expenses, item)
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return expenses
 }
