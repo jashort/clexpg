@@ -2,17 +2,34 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
+	"github.com/alecthomas/kong"
 	"github.com/shopspring/decimal"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"log"
 	"os"
-	"sort"
 	"strings"
 	"time"
 )
+
+var CLI struct {
+	File string `default:"expenses.csv" name:"file" help:"Data file"`
+
+	Rm struct {
+		Force     bool `help:"Force removal."`
+		Recursive bool `help:"Recursively remove files."`
+
+		Paths []string `arg:"" name:"path" help:"Paths to remove." type:"path"`
+	} `cmd:"" help:"Remove files."`
+
+	List struct {
+		Year  int `arg:"" help:"Year" optional:""`
+		Month int `arg:"" help:"Month" optional:""`
+	} `cmd:"" help:"List expenses"`
+	Test struct {
+	} `cmd:"" help:"Test"`
+}
 
 // Expense A single expense
 type Expense struct {
@@ -56,54 +73,18 @@ func formatExpense(expense Expense) string {
 }
 
 func main() {
-	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
-	addFile := addCmd.String("f", "expenses.csv", "Path to data file")
-
-	listCmd := flag.NewFlagSet("list", flag.ExitOnError)
-	listFile := listCmd.String("f", "expenses.csv", "Path to data file")
-
-	command := "help"
-	if len(os.Args) > 1 {
-		command = os.Args[1]
-	}
-
-	switch command {
-	case "add":
-		err := addCmd.Parse(os.Args[2:])
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("add")
-		fmt.Printf("  file: %s\n", *addFile)
+	ctx := kong.Parse(&CLI)
+	switch ctx.Command() {
+	case "rm <path>":
+		println("rm")
 	case "list":
-		err := listCmd.Parse(os.Args[2:])
-		if err != nil {
-			log.Fatal(err)
-		}
-		data := loadFile(*listFile)
-		sort.Sort(byDate(data))
-		for _, element := range data {
-			fmt.Println(element)
-		}
-
-	case "total":
-		fmt.Println("total")
-	case "summary":
-		fmt.Println("summary")
-	case "totals":
-		fmt.Println("totals")
-	case "categories":
-		fmt.Println("categories")
-	case "detail":
-		fmt.Println("detail")
-	case "search":
-		fmt.Println("search")
+		println("list")
+	case "list <year> <month>":
+		println("list")
 	case "test":
 		println(formatExpense(parseExpense("5/21/2023\tfun\tMy stuff\t$10.00")))
 	default:
-		fmt.Println(`Expected subcommand:
-        add, list, summary, total, totals, categories, search, detail, help`)
-		os.Exit(1)
+		panic(ctx.Command())
 	}
 }
 
