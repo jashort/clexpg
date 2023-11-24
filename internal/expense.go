@@ -114,3 +114,34 @@ func ParseExpense(data string) Expense {
 	}
 	return p
 }
+
+func calendarDays(t2, t1 time.Time) int {
+	y, m, d := t2.Date()
+	u2 := time.Date(y, m, d, 0, 0, 0, 0, time.UTC)
+	y, m, d = t1.In(t2.Location()).Date()
+	u1 := time.Date(y, m, d, 0, 0, 0, 0, time.UTC)
+	days := u2.Sub(u1) / (24 * time.Hour)
+	return int(days) + 1
+}
+
+func AverageSpentPerDay(expenses []Expense) decimal.Decimal {
+	if len(expenses) == 0 {
+		return decimal.Zero
+	}
+
+	var firstDay = expenses[0].Date
+	var lastDay = expenses[0].Date
+
+	for _, e := range expenses {
+		if firstDay.After(e.Date) {
+			firstDay = e.Date
+		}
+		if lastDay.Before(e.Date) {
+			lastDay = e.Date
+		}
+	}
+
+	firstDay = time.Date(firstDay.Year(), firstDay.Month(), 1, 0, 0, 0, 0, time.Local)
+	lastDay = time.Date(lastDay.Year(), lastDay.Month(), 1, 0, 0, 0, 0, time.Local).AddDate(0, 1, 0).Add(time.Nanosecond * -1)
+	return Total(expenses).DivRound(decimal.NewFromInt32(int32(calendarDays(lastDay, firstDay))), 2)
+}
