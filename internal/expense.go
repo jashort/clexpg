@@ -56,7 +56,48 @@ func LoadFile(s string) []Expense {
 	return expenses
 }
 
-// Parses a tab-separated string in to an Expense struct
+func Total(expenses []Expense) decimal.Decimal {
+	total := decimal.Zero
+
+	for _, e := range expenses {
+		total = total.Add(e.Cost)
+	}
+	return total
+}
+
+func TotalByCategory(expenses []Expense) map[string]decimal.Decimal {
+	output := make(map[string]decimal.Decimal)
+
+	for _, e := range expenses {
+		output[e.Category] = e.Cost.Add(output[e.Category])
+	}
+	return output
+}
+
+func FilterTime(expenses []Expense, year int, month int) []Expense {
+	var output []Expense
+	for _, e := range expenses {
+		if year == 0 || year == e.Date.Year() {
+			if month == 0 || month == int(e.Date.Month()) {
+				output = append(output, e)
+			}
+		}
+	}
+	return output
+}
+
+func FilterCategory(expenses []Expense, category string) []Expense {
+	var output []Expense
+	lCase := strings.ToLower(category)
+	for _, e := range expenses {
+		if category == "" || strings.ToLower(category) == lCase {
+			output = append(output, e)
+		}
+	}
+	return output
+}
+
+// ParseExpense parses a tab-separated string in to an Expense struct
 // Example: "5/21/2023\t fun\tMy stuff\t$10.00"
 func ParseExpense(data string) Expense {
 	s := strings.Split(strings.TrimSpace(data), "\t")

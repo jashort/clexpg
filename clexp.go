@@ -24,6 +24,7 @@ var cli struct {
 	List       internal.ListCmd       `cmd:"" help:"List expenses"`
 	Summary    internal.SummaryCmd    `cmd:"" help:"Summarize this month vs last month"`
 	Categories internal.CategoriesCmd `cmd:"" help:"List currently used categories"`
+	Detail     internal.DetailCmd     `cmd:"" help:"Show totals by category for the given time period"`
 	Test       TestCmd                `cmd:"" help:"Test"`
 }
 
