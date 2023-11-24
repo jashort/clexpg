@@ -26,6 +26,7 @@ var cli struct {
 	Categories internal.CategoriesCmd `cmd:"" help:"List currently used categories"`
 	Detail     internal.DetailCmd     `cmd:"" help:"Show totals by category for the given time period"`
 	Add        internal.AddCmd        `cmd:"" help:"Add expense"`
+	Search     internal.SearchCmd     `cmd:"" help:"Search expenses"`
 	Test       TestCmd                `cmd:"" help:"Test"`
 }
 
