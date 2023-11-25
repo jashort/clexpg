@@ -12,7 +12,6 @@ type TestCmd struct {
 func (l *TestCmd) Run(ctx *internal.Context) error {
 	fmt.Println("test")
 	println("File: ", ctx.File)
-	println("Debug: ", ctx.Debug)
 	println(internal.ParseExpense("5/21/2023\tfun\tMy stuff\t$10.00").String())
 	return nil
 }
@@ -32,6 +31,6 @@ var cli struct {
 
 func main() {
 	ctx := kong.Parse(&cli)
-	err := ctx.Run(&internal.Context{Debug: cli.Debug, File: cli.File})
+	err := ctx.Run(&internal.Context{File: cli.File})
 	ctx.FatalIfErrorf(err)
 }
