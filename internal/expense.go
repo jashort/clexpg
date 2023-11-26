@@ -105,6 +105,19 @@ func TotalByCategory(expenses []Expense) map[string]decimal.Decimal {
 	return output
 }
 
+func TotalByMonth(expenses []Expense, year int) map[string]decimal.Decimal {
+	output := make(map[string]decimal.Decimal)
+
+	for _, e := range expenses {
+		if year == 0 || e.Date.Year() == year {
+			month := e.Date.Format("2006-01")
+			output[month] = e.Cost.Add(output[month])
+		}
+	}
+
+	return output
+}
+
 func FilterTime(expenses []Expense, year int, month int) []Expense {
 	var output []Expense
 	for _, e := range expenses {
