@@ -16,10 +16,10 @@ func (l *DetailCmd) Run(ctx *Context) error {
 	total := Total(filtered)
 	println()
 	for category, total := range totals {
-		fmt.Printf("     %20s: %10s\n", category, "$"+total.StringFixed(2))
+		fmt.Printf("     %20s: %10s\n", category, FormatDec(total))
 	}
 	println()
-	fmt.Printf("     %20s: %10s\n", "Total", "$"+total.StringFixed(2))
+	fmt.Printf("     %20s: %10s\n", "Total", FormatDec(total))
 	println()
 	return nil
 }

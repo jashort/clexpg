@@ -6,6 +6,8 @@ type Context struct {
 	File string
 }
 
+// FormatDec formats a decimal.Decimal value as a dollar amount, with thousands
+// separated by ",". Eg: 123456.789 > "$123,456.79"
 func FormatDec(number decimal.Decimal) string {
 	output := number.StringFixedBank(2)
 	startOffset := 3
@@ -20,5 +22,5 @@ func FormatDec(number decimal.Decimal) string {
 			break
 		}
 	}
-	return output
+	return "$" + output
 }

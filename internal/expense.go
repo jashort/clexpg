@@ -21,7 +21,13 @@ type Expense struct {
 	Cost     decimal.Decimal
 }
 
+// Expense as a printable string.
 func (e Expense) String() string {
+	return fmt.Sprintf("%s\t%s\t%s\t%s", e.Date.Format("1/2/2006"), e.Category, e.Item, FormatDec(e.Cost))
+}
+
+// Serialize Expense as a serialized string. Notably, does not include commas in the cost
+func (e Expense) Serialize() string {
 	return fmt.Sprintf("%s\t%s\t%s\t$%s", e.Date.Format("1/2/2006"), e.Category, e.Item, e.Cost.StringFixed(2))
 }
 
@@ -75,7 +81,7 @@ func SaveExpense(expense Expense, filename string) {
 			log.Fatal(err)
 		}
 	}
-	_, err = file.WriteString(expense.String() + "\n")
+	_, err = file.WriteString(expense.Serialize() + "\n")
 	if err != nil {
 		log.Fatal(err)
 	}

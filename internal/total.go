@@ -25,7 +25,7 @@ func (l *TotalCmd) Run(ctx *Context) error {
 	} else {
 		fmt.Printf("     Total (all time): ")
 	}
-	fmt.Printf("%12s", "$"+FormatDec(total))
+	fmt.Printf("%12s", FormatDec(total))
 
 	println()
 	return nil

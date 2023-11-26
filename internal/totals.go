@@ -27,7 +27,7 @@ func (l *TotalsCmd) Run(ctx *Context) error {
 		fmt.Printf("Totals by Month for %d:\n", l.Year)
 	}
 	for _, k := range keys {
-		fmt.Printf("     %10s: %10s\n", k, "$"+FormatDec(totals[k]))
+		fmt.Printf("     %10s: %10s\n", k, FormatDec(totals[k]))
 	}
 
 	println()
