@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"github.com/shopspring/decimal"
 	"golang.org/x/text/cases"
@@ -54,6 +55,36 @@ func LoadFile(s string) []Expense {
 		log.Fatal(err)
 	}
 	return expenses
+}
+
+// SaveExpense writes the given Expense to the TSV file filename, creating it with
+// a header if it doesn't exist
+func SaveExpense(expense Expense, filename string) {
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			file, err = os.OpenFile(filename, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+			if err != nil {
+				log.Fatalf("Could not create file %s", filename)
+			}
+			_, err := file.WriteString("Date\tCategory\tItem\tCost\n")
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			log.Fatal(err)
+		}
+	}
+	_, err = file.WriteString(expense.String() + "\n")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
 }
 
 func Total(expenses []Expense) decimal.Decimal {

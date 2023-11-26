@@ -1,7 +1,12 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/shopspring/decimal"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"log"
+	"strings"
+	"time"
 )
 
 type AddCmd struct {
@@ -12,12 +17,30 @@ type AddCmd struct {
 }
 
 func (a *AddCmd) Run(ctx *Context) error {
+	date := time.Now()
+	if a.Date != "" {
+		zone, err := time.LoadLocation("Local")
+		if err != nil {
+			log.Fatal(`Failed to load timezone location "Local"`)
+		}
+		x, err := time.ParseInLocation("01/02/2006", a.Date, zone)
+		if err != nil {
+			log.Fatalf("Error parsing %s: %s", a.Date, err)
+		}
+		date = x
+	}
 
-	fmt.Println(a.Amount, a.Category, a.Description, a.Date)
-	fmt.Println(ctx.File)
-	// Parse fields
-	// Date now if empty
-	// If file doesn't exist, add header
-	// append to file
+	amount, err := decimal.NewFromString(a.Amount)
+	if err != nil {
+		log.Fatalf("Unable to parse %s as decimal", a.Amount)
+	}
+	exp := Expense{
+		Date:     date,
+		Category: strings.TrimSpace(cases.Title(language.English).String(a.Category)),
+		Item:     strings.TrimSpace(a.Description),
+		Cost:     amount,
+	}
+
+	SaveExpense(exp, ctx.File)
 	return nil
 }
