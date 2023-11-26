@@ -15,7 +15,7 @@ func (s *SearchCmd) Run(ctx *Context) error {
 	sort.Sort(byDate(expenses))
 	search := strings.ToLower(s.Search)
 	for _, e := range expenses {
-		if strings.Contains(e.Item, search) {
+		if strings.Contains(strings.ToLower(e.Item), search) {
 			fmt.Println(e)
 		}
 	}
