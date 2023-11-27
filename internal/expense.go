@@ -64,7 +64,7 @@ func LoadFile(s string) []Expense {
 }
 
 // SaveExpense writes the given Expense to the TSV file filename, creating it with
-// a header if it doesn't exist
+// a header if the file doesn't exist
 func SaveExpense(expense Expense, filename string) {
 	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
