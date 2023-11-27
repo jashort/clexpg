@@ -2,23 +2,11 @@ package main
 
 import (
 	"clexpg/internal"
-	"fmt"
 	"github.com/alecthomas/kong"
 )
 
-type TestCmd struct {
-}
-
-func (l *TestCmd) Run(ctx *internal.Context) error {
-	fmt.Println("test")
-	println("File: ", ctx.File)
-	println(internal.ParseExpense("5/21/2023\tfun\tMy stuff\t$10.00").String())
-	return nil
-}
-
 var cli struct {
-	File  string `default:"expenses.csv" name:"file" help:"Data file"`
-	Debug bool   `help:"Enable debug mode."`
+	File string `default:"expenses.csv" name:"file" help:"Data file"`
 
 	List       internal.ListCmd       `cmd:"" help:"List expenses"`
 	Summary    internal.SummaryCmd    `cmd:"" help:"Summarize this month vs last month"`
@@ -28,7 +16,6 @@ var cli struct {
 	Search     internal.SearchCmd     `cmd:"" help:"Search expenses"`
 	Total      internal.TotalCmd      `cmd:"" help:"Total"`
 	Totals     internal.TotalsCmd     `cmd:"" help:"Total expenses by year/month"`
-	Test       TestCmd                `cmd:"" help:"Test"`
 }
 
 func main() {
