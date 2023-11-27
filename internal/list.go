@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -12,13 +11,8 @@ type ListCmd struct {
 
 func (l *ListCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
+	expenses = FilterTime(expenses, l.Year, l.Month)
 	sort.Sort(byDate(expenses))
-	for _, e := range expenses {
-		if l.Year == 0 || l.Year == e.Date.Year() {
-			if l.Month == 0 || l.Month == int(e.Date.Month()) {
-				fmt.Println(e)
-			}
-		}
-	}
+	printAsTable(expenses)
 	return nil
 }

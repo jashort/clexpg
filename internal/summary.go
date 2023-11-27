@@ -1,7 +1,9 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
+	"os"
 	"time"
 )
 
@@ -24,14 +26,37 @@ func (s *SummaryCmd) Run(ctx *Context) error {
 	thisMonthAverage := AverageSpentPerDay(thisMonth)
 	lastMonthAverage := AverageSpentPerDay(lastMonth)
 	lastYearAverage := AverageSpentPerDay(lastYear)
-	println("Total Spent:")
-	fmt.Printf("              This Month: %10s\n", FormatDec(thisMonthTotal))
-	fmt.Printf("              Last Month: %10s\n", FormatDec(lastMonthTotal))
-	fmt.Printf("    This Month Last Year: %10s\n", FormatDec(lastYearTotal))
-	fmt.Printf("\nAverage spent per day:\n")
-	fmt.Printf("              This Month: %10s\n", FormatDec(thisMonthAverage))
-	fmt.Printf("              Last Month: %10s\n", FormatDec(lastMonthAverage))
-	fmt.Printf("    This Month Last Year: %10s\n", FormatDec(lastYearAverage))
-	println("")
+
+	println()
+	t := table.NewWriter()
+	t.Style().Options.DrawBorder = false
+	t.Style().Options.SeparateHeader = false
+	t.Style().Options.SeparateColumns = false
+	t.SetOutputMirror(os.Stdout)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, AutoMerge: false, Align: text.AlignRight, WidthMin: 30},
+		{Number: 2, AutoMerge: false, Align: text.AlignRight, WidthMin: 12},
+	})
+	t.AppendHeader(table.Row{"Total Spent"})
+	t.AppendRow(table.Row{"This Month", FormatDec(thisMonthTotal)})
+	t.AppendRow(table.Row{"Last Month", FormatDec(lastMonthTotal)})
+	t.AppendRow(table.Row{"This Month Last Year", FormatDec(lastYearTotal)})
+	t.Render()
+
+	println()
+	t = table.NewWriter()
+	t.Style().Options.DrawBorder = false
+	t.Style().Options.SeparateHeader = false
+	t.Style().Options.SeparateColumns = false
+	t.SetOutputMirror(os.Stdout)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, AutoMerge: false, Align: text.AlignRight, WidthMin: 30},
+		{Number: 2, AutoMerge: false, Align: text.AlignRight, WidthMin: 12},
+	})
+	t.AppendHeader(table.Row{"Average Spent per Day"})
+	t.AppendRow(table.Row{"This Month", FormatDec(thisMonthAverage)})
+	t.AppendRow(table.Row{"Last Month", FormatDec(lastMonthAverage)})
+	t.AppendRow(table.Row{"This Month Last Year", FormatDec(lastYearAverage)})
+	t.Render()
 	return nil
 }

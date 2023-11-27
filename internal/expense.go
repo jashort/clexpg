@@ -136,6 +136,18 @@ func FilterTime(expenses []Expense, year int, month int) []Expense {
 	return output
 }
 
+func FilterItemSearch(expenses []Expense, search string) []Expense {
+	var output []Expense
+	searchString := strings.ToLower(search)
+	for _, e := range expenses {
+		if strings.Contains(strings.ToLower(e.Item), searchString) {
+			output = append(output, e)
+		}
+	}
+	return output
+
+}
+
 func FilterCategory(expenses []Expense, category string) []Expense {
 	var output []Expense
 	lCase := strings.ToLower(category)

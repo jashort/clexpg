@@ -2,6 +2,10 @@ package internal
 
 import (
 	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/shopspring/decimal"
+	"os"
 	"sort"
 )
 
@@ -21,14 +25,25 @@ func (l *TotalsCmd) Run(ctx *Context) error {
 	sort.Strings(keys)
 
 	println()
-	if l.Year == 0 {
-		fmt.Printf("Totals by Month:")
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, Name: "Month", AutoMerge: false, Align: text.AlignRight, WidthMin: 10},
+		{Number: 2, Name: "Total", AutoMerge: false, Align: text.AlignRight, WidthMin: 12, AlignFooter: text.AlignRight},
+	})
+	if l.Year < 1 {
+		t.AppendHeader(table.Row{"Total by Month"})
 	} else {
-		fmt.Printf("Totals by Month for %d:\n", l.Year)
+		t.AppendHeader(table.Row{fmt.Sprintf("Total by Month (%d)", l.Year)})
 	}
-	for _, k := range keys {
-		fmt.Printf("     %10s: %10s\n", k, FormatDec(totals[k]))
+
+	totalAmount := decimal.Zero
+	for _, key := range keys {
+		t.AppendRow(table.Row{key, FormatDec(totals[key])})
+		totalAmount = totalAmount.Add(totals[key])
 	}
+	t.AppendFooter(table.Row{"Total", FormatDec(totalAmount)})
+	t.Render()
 
 	println()
 	return nil

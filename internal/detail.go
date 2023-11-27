@@ -2,6 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
+	"os"
 )
 
 type DetailCmd struct {
@@ -15,11 +18,31 @@ func (l *DetailCmd) Run(ctx *Context) error {
 	totals := TotalByCategory(filtered)
 	total := Total(filtered)
 	println()
-	for category, total := range totals {
-		fmt.Printf("     %20s: %10s\n", category, FormatDec(total))
+
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, Name: "Category", AutoMerge: false, Align: text.AlignRight, WidthMin: 20},
+		{Number: 2, Name: "Total", AutoMerge: false, Align: text.AlignRight, WidthMin: 12, AlignFooter: text.AlignRight},
+	})
+	if l.Year < 1 {
+		t.AppendHeader(table.Row{"Detail"})
+	} else {
+		if l.Month == 0 {
+			t.AppendHeader(table.Row{fmt.Sprintf("Detail (%d)", l.Year)})
+		} else {
+			t.AppendHeader(table.Row{fmt.Sprintf("Detail (%d/%d)", l.Month, l.Year)})
+		}
 	}
-	println()
-	fmt.Printf("     %20s: %10s\n", "Total", FormatDec(total))
-	println()
+	t.SortBy([]table.SortBy{
+		{Number: 1, Name: "Category", Mode: table.Asc},
+	})
+	for category, total := range totals {
+		t.AppendRow(table.Row{category, FormatDec(total)})
+	}
+
+	t.AppendFooter(table.Row{"Total", FormatDec(total)})
+
+	t.Render()
 	return nil
 }

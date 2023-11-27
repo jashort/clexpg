@@ -1,7 +1,8 @@
 package internal
 
 import (
-	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"os"
 	"slices"
 	"sort"
 )
@@ -18,8 +19,18 @@ func (c CategoriesCmd) Run(ctx *Context) error {
 		}
 	}
 	sort.Sort(sort.StringSlice(categories))
+
+	println()
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, AutoMerge: false, WidthMin: 20},
+	})
+	t.AppendHeader(table.Row{"Categories"})
 	for _, c := range categories {
-		fmt.Printf("  %s\n", c)
+		t.AppendRow(table.Row{c})
 	}
+	t.Render()
+
 	return nil
 }
