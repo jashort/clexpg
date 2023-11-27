@@ -116,8 +116,13 @@ func TotalByMonth(expenses []Expense, year int) map[string]decimal.Decimal {
 
 	for _, e := range expenses {
 		if year == 0 || e.Date.Year() == year {
-			month := e.Date.Format("2006-01")
-			output[month] = e.Cost.Add(output[month])
+			period := ""
+			if year == 0 {
+				period = e.Date.Format("2006")
+			} else {
+				period = e.Date.Format("2006-01")
+			}
+			output[period] = e.Cost.Add(output[period])
 		}
 	}
 

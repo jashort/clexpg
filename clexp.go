@@ -27,7 +27,7 @@ var cli struct {
 	Add        internal.AddCmd        `cmd:"" help:"Add expense"`
 	Search     internal.SearchCmd     `cmd:"" help:"Search expenses"`
 	Total      internal.TotalCmd      `cmd:"" help:"Total"`
-	Totals     internal.TotalsCmd     `cmd:"" help:"Total expenses by month"`
+	Totals     internal.TotalsCmd     `cmd:"" help:"Total expenses by year/month"`
 	Test       TestCmd                `cmd:"" help:"Test"`
 }
 

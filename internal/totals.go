@@ -32,7 +32,7 @@ func (l *TotalsCmd) Run(ctx *Context) error {
 		{Number: 2, Name: "Total", AutoMerge: false, Align: text.AlignRight, WidthMin: 12, AlignFooter: text.AlignRight},
 	})
 	if l.Year < 1 {
-		t.AppendHeader(table.Row{"Total by Month"})
+		t.AppendHeader(table.Row{"Total by Year"})
 	} else {
 		t.AppendHeader(table.Row{fmt.Sprintf("Total by Month (%d)", l.Year)})
 	}
