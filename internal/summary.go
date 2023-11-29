@@ -11,9 +11,9 @@ type SummaryCmd struct {
 	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
-func (s *SummaryCmd) Run(ctx *Context) error {
+func (cmd *SummaryCmd) Run(ctx *Context) error {
 	expenses := LoadFile(ctx.File)
-	expenses = FilterCategories(expenses, s.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories)
 	now := time.Now()
 	lastMonthNow := now.AddDate(0, -1, 0)
 	lastYearNow := now.AddDate(-1, 0, 0)

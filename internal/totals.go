@@ -14,11 +14,11 @@ type TotalsCmd struct {
 	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
-func (l *TotalsCmd) Run(ctx *Context) error {
+func (cmd *TotalsCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
-	expenses = FilterCategories(expenses, l.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories)
 
-	totals := TotalByMonth(expenses, l.Year)
+	totals := TotalByMonth(expenses, cmd.Year)
 
 	keys := make([]string, 0, len(totals))
 	for k := range totals {
@@ -33,10 +33,10 @@ func (l *TotalsCmd) Run(ctx *Context) error {
 		{Number: 1, Name: "Month", AutoMerge: false, Align: text.AlignRight, WidthMin: 10},
 		{Number: 2, Name: "Total", AutoMerge: false, Align: text.AlignRight, WidthMin: 12, AlignFooter: text.AlignRight},
 	})
-	if l.Year < 1 {
+	if cmd.Year < 1 {
 		t.AppendHeader(table.Row{"Total by Year"})
 	} else {
-		t.AppendHeader(table.Row{fmt.Sprintf("Total by Month (%d)", l.Year)})
+		t.AppendHeader(table.Row{fmt.Sprintf("Total by Month (%d)", cmd.Year)})
 	}
 
 	totalAmount := decimal.Zero

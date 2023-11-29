@@ -5,10 +5,10 @@ type SearchCmd struct {
 	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
-func (s *SearchCmd) Run(ctx *Context) error {
+func (cmd *SearchCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
-	expenses = FilterItemSearch(expenses, s.Search)
-	expenses = FilterCategories(expenses, s.Categories)
+	expenses = FilterItemSearch(expenses, cmd.Search)
+	expenses = FilterCategories(expenses, cmd.Categories)
 	printAsTable(expenses)
 	return nil
 }

@@ -10,10 +10,10 @@ type ListCmd struct {
 	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
-func (l *ListCmd) Run(ctx *Context) error {
+func (cmd *ListCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
-	expenses = FilterTime(expenses, l.Year, l.Month)
-	expenses = FilterCategories(expenses, l.Categories)
+	expenses = FilterTime(expenses, cmd.Year, cmd.Month)
+	expenses = FilterCategories(expenses, cmd.Categories)
 	sort.Sort(byDate(expenses))
 	printAsTable(expenses)
 	return nil

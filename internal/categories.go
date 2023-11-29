@@ -10,7 +10,7 @@ import (
 type CategoriesCmd struct {
 }
 
-func (c CategoriesCmd) Run(ctx *Context) error {
+func (cmd CategoriesCmd) Run(ctx *Context) error {
 	expenses := LoadFile(ctx.File)
 	var categories []string
 	for _, e := range expenses {

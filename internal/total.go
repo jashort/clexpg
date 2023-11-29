@@ -10,18 +10,18 @@ type TotalCmd struct {
 	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
-func (l *TotalCmd) Run(ctx *Context) error {
+func (cmd *TotalCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
-	filtered := FilterTime(expenses, l.Year, l.Month)
-	filtered = FilterCategories(filtered, l.Categories)
+	filtered := FilterTime(expenses, cmd.Year, cmd.Month)
+	filtered = FilterCategories(filtered, cmd.Categories)
 	total := Total(filtered)
 
 	println()
-	if l.Year != 0 {
-		if l.Month == 0 {
-			fmt.Printf("         Total (%d): ", l.Year)
+	if cmd.Year != 0 {
+		if cmd.Month == 0 {
+			fmt.Printf("         Total (%d): ", cmd.Year)
 		} else {
-			fmt.Printf("      Total (%d/%d): ", l.Month, l.Year)
+			fmt.Printf("      Total (%d/%d): ", cmd.Month, cmd.Year)
 		}
 	} else {
 		fmt.Printf("     Total (all time): ")

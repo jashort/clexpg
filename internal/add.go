@@ -16,28 +16,28 @@ type AddCmd struct {
 	Date        string `arg:"" optional:"" help:"Date in MM/DD/YYYY format (default: today)"`
 }
 
-func (a *AddCmd) Run(ctx *Context) error {
+func (cmd *AddCmd) Run(ctx *Context) error {
 	date := time.Now()
-	if a.Date != "" {
+	if cmd.Date != "" {
 		zone, err := time.LoadLocation("Local")
 		if err != nil {
 			log.Fatal(`Failed to load timezone location "Local"`)
 		}
-		x, err := time.ParseInLocation("01/02/2006", a.Date, zone)
+		x, err := time.ParseInLocation("01/02/2006", cmd.Date, zone)
 		if err != nil {
-			log.Fatalf("Error parsing %s: %s", a.Date, err)
+			log.Fatalf("Error parsing %s: %s", cmd.Date, err)
 		}
 		date = x
 	}
 
-	amount, err := decimal.NewFromString(a.Amount)
+	amount, err := decimal.NewFromString(cmd.Amount)
 	if err != nil {
-		log.Fatalf("Unable to parse %s as decimal", a.Amount)
+		log.Fatalf("Unable to parse %s as decimal", cmd.Amount)
 	}
 	exp := Expense{
 		Date:     date,
-		Category: strings.TrimSpace(cases.Title(language.English).String(a.Category)),
-		Item:     strings.TrimSpace(a.Description),
+		Category: strings.TrimSpace(cases.Title(language.English).String(cmd.Category)),
+		Item:     strings.TrimSpace(cmd.Description),
 		Cost:     amount,
 	}
 
