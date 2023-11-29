@@ -5,14 +5,15 @@ import (
 )
 
 type TotalCmd struct {
-	Year  int `arg:"" optional:"" help:"Year"`
-	Month int `arg:"" optional:"" help:"Month"`
+	Year       int      `arg:"" optional:"" help:"Year"`
+	Month      int      `arg:"" optional:"" help:"Month"`
+	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
 func (l *TotalCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
 	filtered := FilterTime(expenses, l.Year, l.Month)
-
+	filtered = FilterCategories(filtered, l.Categories)
 	total := Total(filtered)
 
 	println()

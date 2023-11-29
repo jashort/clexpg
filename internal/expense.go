@@ -153,12 +153,20 @@ func FilterItemSearch(expenses []Expense, search string) []Expense {
 
 }
 
-func FilterCategory(expenses []Expense, category string) []Expense {
+func FilterCategories(expenses []Expense, categories []string) []Expense {
 	var output []Expense
-	lCase := strings.ToLower(category)
+
+	//lCase := strings.ToLower(category)
 	for _, e := range expenses {
-		if category == "" || strings.ToLower(category) == lCase {
+		if len(categories) == 0 {
 			output = append(output, e)
+		} else {
+			lCase := strings.ToLower(e.Category)
+			for _, c := range categories {
+				if strings.ToLower(c) == strings.ToLower(lCase) {
+					output = append(output, e)
+				}
+			}
 		}
 	}
 	return output

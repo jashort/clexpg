@@ -8,13 +8,15 @@ import (
 )
 
 type DetailCmd struct {
-	Year  int `arg:"" optional:"" help:"Year"`
-	Month int `arg:"" optional:"" help:"Month"`
+	Year       int      `arg:"" optional:"" help:"Year"`
+	Month      int      `arg:"" optional:"" help:"Month"`
+	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
 func (l *DetailCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
 	filtered := FilterTime(expenses, l.Year, l.Month)
+	filtered = FilterCategories(filtered, l.Categories)
 	totals := TotalByCategory(filtered)
 	total := Total(filtered)
 	println()
@@ -26,12 +28,12 @@ func (l *DetailCmd) Run(ctx *Context) error {
 		{Number: 2, Name: "Total", AutoMerge: false, Align: text.AlignRight, WidthMin: 12, AlignFooter: text.AlignRight},
 	})
 	if l.Year < 1 {
-		t.AppendHeader(table.Row{"Detail"})
+		t.SetTitle("Detail", table.TitleOptions{})
 	} else {
 		if l.Month == 0 {
-			t.AppendHeader(table.Row{fmt.Sprintf("Detail (%d)", l.Year)})
+			t.SetTitle(fmt.Sprintf("Detail (%d)", l.Year))
 		} else {
-			t.AppendHeader(table.Row{fmt.Sprintf("Detail (%d/%d)", l.Month, l.Year)})
+			t.SetTitle(fmt.Sprintf("Detail (%d/%d)", l.Month, l.Year))
 		}
 	}
 	t.SortBy([]table.SortBy{

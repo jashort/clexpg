@@ -50,7 +50,7 @@ func printAsTable(expenses []Expense) {
 			categoryLength = max(categoryLength, len(e.Category))
 			costLength = max(costLength, len(FormatDec(e.Cost)))
 		}
-		maxItemLength = width - (dateLength + categoryLength + costLength + 13)
+		maxItemLength = width - (dateLength + categoryLength + costLength + 16)
 	}
 
 	t := table.NewWriter()

@@ -10,11 +10,13 @@ import (
 )
 
 type TotalsCmd struct {
-	Year int `arg:"" optional:"" help:"Year"`
+	Year       int      `arg:"" optional:"" help:"Year"`
+	Categories []string `short:"c" optional:"" help:"Show only these categories (comma separated)"`
 }
 
 func (l *TotalsCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
+	expenses = FilterCategories(expenses, l.Categories)
 
 	totals := TotalByMonth(expenses, l.Year)
 

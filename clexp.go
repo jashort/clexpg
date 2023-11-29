@@ -6,7 +6,7 @@ import (
 )
 
 var cli struct {
-	File string `default:"expenses.csv" name:"file" help:"Data file"`
+	File string `default:"expenses.csv" name:"file" short:"f" help:"Data file"`
 
 	List       internal.ListCmd       `cmd:"" help:"List expenses"`
 	Summary    internal.SummaryCmd    `cmd:"" help:"Summarize this month vs last month"`
