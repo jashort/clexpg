@@ -28,7 +28,7 @@ func (cmd *DetailCmd) Run(ctx *Context) error {
 		{Number: 2, Name: "Total", AutoMerge: false, Align: text.AlignRight, WidthMin: 12, AlignFooter: text.AlignRight},
 	})
 	if cmd.Year < 1 {
-		t.SetTitle("Detail", table.TitleOptions{})
+		t.SetTitle("Detail")
 	} else {
 		if cmd.Month == 0 {
 			t.SetTitle(fmt.Sprintf("Detail (%d)", cmd.Year))
