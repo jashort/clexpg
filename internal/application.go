@@ -42,15 +42,16 @@ func printAsTable(expenses []Expense) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		dateLength := 0
-		categoryLength := 0
-		costLength := 0
+		// Minimum length is the length of the headers + two spaces
+		dateLength := 6
+		categoryLength := 10
+		costLength := 6
 		for _, e := range expenses {
 			dateLength = max(dateLength, len(e.Date.Format("1/2/2006")))
 			categoryLength = max(categoryLength, len(e.Category))
 			costLength = max(costLength, len(FormatDec(e.Cost)))
 		}
-		maxItemLength = width - (dateLength + categoryLength + costLength + 16)
+		maxItemLength = width - (dateLength + categoryLength + costLength + 13)
 	}
 
 	t := table.NewWriter()
