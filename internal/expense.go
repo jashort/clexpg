@@ -156,7 +156,6 @@ func FilterItemSearch(expenses []Expense, search string) []Expense {
 func FilterCategories(expenses []Expense, categories []string) []Expense {
 	var output []Expense
 
-	//lCase := strings.ToLower(category)
 	for _, e := range expenses {
 		if len(categories) == 0 {
 			output = append(output, e)
