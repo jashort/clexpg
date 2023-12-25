@@ -2,6 +2,7 @@ package internal
 
 import (
 	"github.com/shopspring/decimal"
+	"github.com/vjeantet/govaluate"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"log"
@@ -30,10 +31,15 @@ func (cmd *AddCmd) Run(ctx *Context) error {
 		date = x
 	}
 
-	amount, err := decimal.NewFromString(cmd.Amount)
+	expression, err := govaluate.NewEvaluableExpression(cmd.Amount)
+	if err != nil {
+		log.Fatalf("Unable to parse %s as expression", cmd.Amount)
+	}
+	result, err := expression.Evaluate(nil)
 	if err != nil {
 		log.Fatalf("Unable to parse %s as decimal", cmd.Amount)
 	}
+	amount := decimal.NewFromFloat(result.(float64))
 	exp := Expense{
 		Date:     date,
 		Category: strings.TrimSpace(cases.Title(language.English).String(cmd.Category)),

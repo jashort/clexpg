@@ -6,6 +6,7 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/jedib0t/go-pretty/v6 v6.4.9
 	github.com/shopspring/decimal v1.3.1
+	github.com/vjeantet/govaluate v1.3.0
 	golang.org/x/term v0.14.0
 	golang.org/x/text v0.14.0
 )
