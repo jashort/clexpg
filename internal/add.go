@@ -26,7 +26,10 @@ func (cmd *AddCmd) Run(ctx *Context) error {
 		}
 		x, err := time.ParseInLocation("01/02/2006", cmd.Date, zone)
 		if err != nil {
-			log.Fatalf("Error parsing %s: %s", cmd.Date, err)
+			x, err = time.ParseInLocation("1/2/2006", cmd.Date, zone)
+			if err != nil {
+				log.Fatalf("Error parsing %s: %s", cmd.Date, err)
+			}
 		}
 		date = x
 	}
