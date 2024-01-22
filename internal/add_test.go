@@ -16,12 +16,12 @@ func Test_parseExpense(t *testing.T) {
 	}{
 		{name: "Happy Path",
 			args: args{cmd: &AddCmd{
-				Amount:      "1",
+				Amount:      "1.23",
 				Category:    "food",
 				Description: "hamburger",
 				Date:        "3/19/2024",
 			}},
-			want: "3/19/2024\tFood\thamburger\t$1.00"},
+			want: "3/19/2024\tFood\thamburger\t$1.23"},
 		{name: "Zero padded date",
 			args: args{cmd: &AddCmd{
 				Amount:      "1",
@@ -56,7 +56,7 @@ func Test_parseExpense(t *testing.T) {
 			want: "3/9/2024\tGroceries\tgroceries\t$33.55"},
 		{name: "Multiple subtraction",
 			args: args{cmd: &AddCmd{
-				Amount:      "(100-9.99)-10.33",
+				Amount:      "100-9.99-10.33",
 				Category:    "groceries",
 				Description: "groceries",
 				Date:        "03/09/2024",

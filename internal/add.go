@@ -1,8 +1,8 @@
 package internal
 
 import (
+	"github.com/expr-lang/expr"
 	"github.com/shopspring/decimal"
-	"github.com/vjeantet/govaluate"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"log"
@@ -41,15 +41,27 @@ func parseExpense(cmd *AddCmd) Expense {
 		date = x
 	}
 
-	expression, err := govaluate.NewEvaluableExpression(cmd.Amount)
+	expression, err := expr.Compile(cmd.Amount)
 	if err != nil {
 		log.Fatalf("Unable to parse %s as expression", cmd.Amount)
 	}
-	result, err := expression.Evaluate(nil)
+	result, err := expr.Run(expression, nil)
 	if err != nil {
 		log.Fatalf("Unable to parse %s as decimal", cmd.Amount)
 	}
-	amount := decimal.NewFromFloat(result.(float64))
+	amount := decimal.Zero
+	switch result.(type) {
+	case float64:
+		amount = decimal.NewFromFloat(result.(float64))
+	case int:
+
+		amount = decimal.NewFromFloat(float64(result.(int)))
+	}
+
+	if err != nil {
+		log.Fatalf("Unable to parse %s as decimal", cmd.Amount)
+	}
+
 	exp := Expense{
 		Date:     date,
 		Category: strings.TrimSpace(cases.Title(language.English).String(cmd.Category)),
