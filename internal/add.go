@@ -18,6 +18,13 @@ type AddCmd struct {
 }
 
 func (cmd *AddCmd) Run(ctx *Context) error {
+	exp := parseExpense(cmd)
+
+	SaveExpense(exp, ctx.File)
+	return nil
+}
+
+func parseExpense(cmd *AddCmd) Expense {
 	date := time.Now()
 	if cmd.Date != "" {
 		zone, err := time.LoadLocation("Local")
@@ -49,7 +56,5 @@ func (cmd *AddCmd) Run(ctx *Context) error {
 		Item:     strings.TrimSpace(cmd.Description),
 		Cost:     amount,
 	}
-
-	SaveExpense(exp, ctx.File)
-	return nil
+	return exp
 }
