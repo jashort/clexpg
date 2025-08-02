@@ -153,14 +153,24 @@ func FilterItemSearch(expenses []Expense, search string) []Expense {
 
 }
 
-func FilterCategories(expenses []Expense, categories []string) []Expense {
+func FilterCategories(expenses []Expense, categories []string, ignoreCategories []string) []Expense {
 	var output []Expense
 
 	for _, e := range expenses {
+		lCase := strings.ToLower(e.Category)
+
 		if len(categories) == 0 {
-			output = append(output, e)
+			shouldIgnore := false
+			for _, c := range ignoreCategories {
+				if lCase == strings.ToLower(c) {
+					shouldIgnore = true
+					continue
+				}
+			}
+			if !shouldIgnore {
+				output = append(output, e)
+			}
 		} else {
-			lCase := strings.ToLower(e.Category)
 			for _, c := range categories {
 				if strings.ToLower(c) == strings.ToLower(lCase) {
 					output = append(output, e)

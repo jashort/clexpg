@@ -16,7 +16,7 @@ type DetailCmd struct {
 func (cmd *DetailCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
 	expenses = FilterTime(expenses, cmd.Year, cmd.Month)
-	expenses = FilterCategories(expenses, cmd.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories, ctx.IgnoreCategories)
 	totals := TotalByCategory(expenses)
 	total := Total(expenses)
 	println()
