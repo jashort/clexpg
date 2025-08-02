@@ -10,7 +10,8 @@ import (
 )
 
 type Context struct {
-	File string
+	File             string
+	IgnoreCategories []string
 }
 
 // FormatDec formats a decimal.Decimal value as a dollar amount, with thousands

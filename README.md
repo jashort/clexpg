@@ -10,7 +10,7 @@ via another service ([Spideroak](http://www.spideroak.com/),
 
 Usage:
 -------------
-    clexpg [-f filename] <command> [arguments]
+    clexpg [-f filename] [--ignore <categories>] <command> [arguments]
 
 Examples:
 
@@ -46,11 +46,14 @@ and the date 12/20/2013)
     clexp categories
 (shows categories currently found in the data file)
 
-    clexp plot
-(plots total amount spent by month using matplotlib)
-
+    clexpg --ignore food totals
+(Ignores anything in the "food" category for reporting; totals, summary, etc.)
 
 Settings:
 -------------
 Data is read from/saved to the file specified by the -f parameter, or defaults
 to ~/.clexp/data.csv.
+
+`--ignore <category1,category2...>` Ignores anything with the listed categories
+for reporting (totals, summary, etc.) Only applies if `-c` isn't used to include
+specific categories.

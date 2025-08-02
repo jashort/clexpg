@@ -8,7 +8,7 @@ type SearchCmd struct {
 func (cmd *SearchCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
 	expenses = FilterItemSearch(expenses, cmd.Search)
-	expenses = FilterCategories(expenses, cmd.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories, []string{})
 	printAsTable(expenses)
 	return nil
 }

@@ -6,7 +6,8 @@ import (
 )
 
 var cli struct {
-	File string `default:"expenses.csv" name:"file" short:"f" help:"Data file"`
+	File             string   `default:"expenses.csv" name:"file" short:"f" help:"Data file"`
+	IgnoreCategories []string `default:"" name:"ignore" help:"Ignore Categories for reporting"`
 
 	List       internal.ListCmd       `cmd:"" help:"List expenses"`
 	Summary    internal.SummaryCmd    `cmd:"" help:"Summarize this month vs last month"`
@@ -20,6 +21,6 @@ var cli struct {
 
 func main() {
 	ctx := kong.Parse(&cli)
-	err := ctx.Run(&internal.Context{File: cli.File})
+	err := ctx.Run(&internal.Context{File: cli.File, IgnoreCategories: cli.IgnoreCategories})
 	ctx.FatalIfErrorf(err)
 }

@@ -13,7 +13,7 @@ type ListCmd struct {
 func (cmd *ListCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
 	expenses = FilterTime(expenses, cmd.Year, cmd.Month)
-	expenses = FilterCategories(expenses, cmd.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories, []string{})
 	sort.Sort(byDate(expenses))
 	printAsTable(expenses)
 	return nil

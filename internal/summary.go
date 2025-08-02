@@ -13,7 +13,7 @@ type SummaryCmd struct {
 
 func (cmd *SummaryCmd) Run(ctx *Context) error {
 	expenses := LoadFile(ctx.File)
-	expenses = FilterCategories(expenses, cmd.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories, ctx.IgnoreCategories)
 	now := time.Now()
 	lastMonthNow := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, now.Nanosecond(), now.Location()).AddDate(0, -1, 0)
 	lastYearNow := now.AddDate(-1, 0, 0)

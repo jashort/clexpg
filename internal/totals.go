@@ -16,7 +16,7 @@ type TotalsCmd struct {
 
 func (cmd *TotalsCmd) Run(ctx *Context) error {
 	var expenses = LoadFile(ctx.File)
-	expenses = FilterCategories(expenses, cmd.Categories)
+	expenses = FilterCategories(expenses, cmd.Categories, ctx.IgnoreCategories)
 
 	totals := TotalByMonth(expenses, cmd.Year)
 
