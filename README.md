@@ -55,5 +55,5 @@ Data is read from/saved to the file specified by the -f parameter, or defaults
 to ~/.clexp/data.csv.
 
 `--ignore <category1,category2...>` Ignores anything with the listed categories
-for reporting (totals, summary, etc.) Only applies if `-c` isn't used to include
-specific categories.
+for reporting (totals, summary, detail, etc.) Only applies if `-c` isn't used to include
+specific categories. `search` and `list` will still include all categories
